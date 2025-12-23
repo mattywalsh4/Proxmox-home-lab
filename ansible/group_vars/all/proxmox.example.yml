@@ -1,0 +1,4 @@
+proxmox_api_host: "192.168.100.2"
+proxmox_user: "ansible@pve
+proxmox_token_id: "automation"
+proxmox_token_secret: "**********************"
