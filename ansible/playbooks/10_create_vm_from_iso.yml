@@ -4,7 +4,7 @@
   connection: local
   gather_facts: false
   vars_files:
-  - proxmox. yml
+  - proxmox.yml
 
   vars:
     node: "matty"
@@ -21,7 +21,7 @@
   tasks:
     - name: Configure VM definition
       community.general.proxmox_kvm:
-        api_host: "{{ proxmox_api_host ]]"
+        api_host: "{{ proxmox_api_host }}"
         api_user: "{{ proxmox_user }}"
         api_token_id: "{{ proxmox_token_id }}"
         api_token_secret: "{{ proxmox_token_secret }}"
@@ -35,11 +35,10 @@
         scsihw: "virtio-scsi-pci"
         scsi:
         scsio: "{{ disk_storage }}:{{ disk_size_gb }}"
-
         ide:
-          ide2: "{{ iso_path ]],media=cdrom"
+          ide2: "{{ iso_path }},media=cdrom"
         net :
-          neto: "virtio,bridge={ { bridge ]}"
+          neto: "virtio,bridge={{ bridge }}"
         boot: "order=ide2;scsio;net0"
         ostype: "126"
         state: present
