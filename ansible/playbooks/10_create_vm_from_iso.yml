@@ -1,0 +1,58 @@
+---
+- name: Create Vm that boots from ISO
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+  - proxmox. yml
+
+  vars:
+    node: "matty"
+    vmid: 120
+    vm_name: "pfsensefromansible"
+    cores: 2
+    memory: 4096
+
+    disk_storage: "local-lvm"
+    disk_size_gb: 40
+    iso_path: "local: iso/netgate-installer-v1.1.1-RELEASE-amd64.iso"
+    bridge: "vmbr0"
+
+  tasks:
+    - name: Configure VM definition
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host ]]"
+        api_user: "{{ proxmox_user }}"
+        api_token_id: "{{ proxmox_token_id }}"
+        api_token_secret: "{{ proxmox_token_secret }}"
+        node: "{{ node }}"
+        vmid: "{{ vmid }}"
+        name: "{{ vm_name }}"
+        cores: "{{ cores }}"
+        memory: "{{ memory }}"
+        kvm: false
+        agent: 1
+        scsihw: "virtio-scsi-pci"
+        scsi:
+        scsio: "{{ disk_storage }}:{{ disk_size_gb }}"
+
+        ide:
+          ide2: "{{ iso_path ]],media=cdrom"
+        net :
+          neto: "virtio,bridge={ { bridge ]}"
+        boot: "order=ide2;scsio;net0"
+        ostype: "126"
+        state: present
+
+    - name: Start VM (boot from ISO)
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_user: "{{ proxmox_user }}"
+        api_token_id: "{{ proxmox_token_id }}"
+        api_token_secret: "{{ proxmox_token_secret }}"
+        node: "{{ node }}"
+        vmid: "{{ vmid }}"
+        state: started
+
+
+
